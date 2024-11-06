@@ -4,7 +4,6 @@ torchvision==0.15.1
 Pillow==11.0.0
 requests==2.31.0
 numpy==1.25.0
-cmake==3.30.5
+cmake>=3.22.0  # CMake version compatible with most PyTorch setups; adjust if necessary
 sympy==1.13.3
 networkx==3.4.2
-# Add other packages as needed
