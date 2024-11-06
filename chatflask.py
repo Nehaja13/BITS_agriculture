@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, request, jsonify
 import numpy as np
 import torch
@@ -17,7 +15,7 @@ from utils.model import ResNet9
 app = Flask(__name__)
 
 # Load trained models and classes
-disease_classes = ['Apple___Apple_scab', 'Apple___Black_rot', ... , 'Tomato___healthy']
+disease_classes = ['Apple___Apple_scab', 'Apple___Black_rot', ..., 'Tomato___healthy']
 disease_model_path = 'models/plant_disease_model.pth'
 crop_recommendation_model_path = 'models/RandomForest.pkl'
 
@@ -73,4 +71,5 @@ def health():
     return jsonify({'status': 'API is up and running'}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 5000)), debug=True)
+
