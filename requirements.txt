@@ -3,4 +3,5 @@ requests==2.31.0
 Pillow==11.0.0  # or the latest version if you're using image processing
 numpy==1.25.0  # if using for image or data processing
 torch==1.13.1
+torchvision
 
