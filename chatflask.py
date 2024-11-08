@@ -1,4 +1,8 @@
 from flask import Flask, request, jsonify
+from utils import disease_dic
+
+# Access disease_dic directly or call get_disease_info if needed
+
 import numpy as np
 import os
 import torch
