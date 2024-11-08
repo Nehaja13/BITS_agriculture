@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
-
-from src.utils.disease import disease_dic
+from utils.disease import disease_dic
 
 import sys
 sys.path.append('/opt/render/project/src')
