@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from src.utils.disease import disease_dic
+import sys
+sys.path.append('/opt/render/project/src')
 
 
 # Access disease_dic directly or call get_disease_info if needed
