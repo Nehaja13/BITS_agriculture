@@ -1,12 +1,7 @@
 from flask import Flask, request, jsonify
-from utils.disease import disease_dic
-
-import sys
-sys.path.append('/opt/render/project/src')
-
-
-# Access disease_dic directly or call get_disease_info if needed
-
+from utils.disease import disease_dic  # Assuming utils module is correctly set up in your project
+from utils.fertilizer import fertilizer_dic  # Add this only if you’re using fertilizer data
+from utils.model import ResNet9  # Make sure ResNet9 is accessible
 import numpy as np
 import os
 import torch
@@ -15,20 +10,15 @@ from PIL import Image
 from torchvision import transforms
 import io
 
-# Import dictionaries and models
-from utils.disease import disease_dic
-from utils.fertilizer import fertilizer_dic
-from utils.model import ResNet9
-
 # Initialize Flask app
 app = Flask(__name__)
 
-# Load trained models and classes
-disease_classes = ['Apple___Apple_scab', 'Apple___Black_rot', ..., 'Tomato___healthy']
+# Load classes for disease prediction and models
+disease_classes = ['Apple___Apple_scab', 'Apple___Black_rot', ..., 'Tomato___healthy']  # Ensure full list of classes
 disease_model_path = 'models/plant_disease_model.pth'
 crop_recommendation_model_path = 'models/RandomForest.pkl'
 
-# Load the disease prediction model
+# Load the disease model
 disease_model = ResNet9(3, len(disease_classes))
 disease_model.load_state_dict(torch.load(disease_model_path, map_location=torch.device('cpu')))
 disease_model.eval()
@@ -41,9 +31,9 @@ with open(crop_recommendation_model_path, 'rb') as f:
 def predict_disease(img_bytes):
     try:
         transform = transforms.Compose([transforms.Resize(256), transforms.ToTensor()])
-        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')  # Ensure image is in RGB mode
+        img = Image.open(io.BytesIO(img_bytes)).convert('RGB')  # Convert to RGB
         img_t = transform(img)
-        img_t = torch.unsqueeze(img_t, 0)
+        img_t = torch.unsqueeze(img_t, 0)  # Add batch dimension
         
         with torch.no_grad():
             prediction = disease_model(img_t)
@@ -53,7 +43,7 @@ def predict_disease(img_bytes):
         print(f"Error in predicting disease: {e}")
         return None
 
-# Endpoint to handle disease prediction
+# Endpoint for disease prediction
 @app.route('/predict_disease', methods=['POST'])
 def predict_disease_endpoint():
     if 'file' not in request.files:
@@ -100,4 +90,3 @@ def health():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Default to 5000 if PORT is not set
     app.run(host="0.0.0.0", port=port)
-    print("Starting Flask app...")
