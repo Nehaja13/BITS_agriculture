@@ -1,0 +1,11 @@
+# Example: Training and saving a RandomForest model in Scikit-Learn
+from sklearn.ensemble import RandomForestClassifier
+import pickle
+
+# Assuming X_train and y_train are your training data and labels
+crop_recommendation_model = RandomForestClassifier()
+crop_recommendation_model.fit(X_train, y_train)
+
+# Save the model to a file
+with open("models/RandomForest.pkl", "wb") as f:
+    pickle.dump(crop_recommendation_model, f)
