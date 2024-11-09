@@ -1,6 +1,7 @@
 import torch
 from model import ResNet9  # Ensure ResNet9 is defined in model.py
-
+model_path = "path/to/plant_disease_model.pth"
+model = torch.load(model_path, map_location=torch.device('cpu'))
 # Path to the model file
 disease_model_path = "models/plant_disease_model.pth"
 
