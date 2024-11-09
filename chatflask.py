@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from utils.disease import disease_dic  # Assuming utils module is correctly set up in your project
-from utils.fertilizer import fertilizer_dic  # Add this only if you’re using fertilizer data
+#from utils.fertilizer import fertilizer_dic  # Add this only if you’re using fertilizer data
 from utils.model import ResNet9  # Make sure ResNet9 is accessible
 import numpy as np
 import os
