@@ -1,41 +1,47 @@
 import torch
-from model import ResNet9  # Ensure the ResNet9 model is properly defined in your model.py
+from model import ResNet9  # Ensure ResNet9 is defined in model.py
 
-# Define the path to your model file
+# Path to the model file
 disease_model_path = "models/plant_disease_model.pth"
 
-# Placeholder: make sure to define or import your disease_classes list
-# Example:
-# disease_classes = ["class_1", "class_2", "class_3"]  # Update with actual classes
-disease_classes = [...]  # Replace with your list of disease classes
+# Placeholder: ensure disease_classes is defined
+# Example: disease_classes = ["class_1", "class_2", ...]
+disease_classes = [...]  # Replace with your disease classes list
 
-# Initialize the model with the correct parameters
+# Initialize the model with correct parameters
 disease_model = ResNet9(num_channels=3, num_classes=len(disease_classes))
 
-# Attempt to load the model weights with error handling
+# Try loading the model with error handling for corrupt or incompatible files
 try:
-    # Load the model file with compatibility options
+    # Attempt to load as a state dictionary
     checkpoint = torch.load(disease_model_path, map_location=torch.device("cpu"))
-    disease_model.load_state_dict(checkpoint)
+    if isinstance(checkpoint, dict):
+        disease_model.load_state_dict(checkpoint)
+    else:
+        # If loading as state dict fails, directly load the model
+        disease_model = checkpoint
+
     disease_model.eval()
     print("Model loaded successfully.")
 
 except RuntimeError as e:
-    print("RuntimeError encountered. Attempting to load with 'latin1' encoding.")
+    print("RuntimeError encountered. Attempting with 'latin1' encoding.")
     try:
-        # Attempt loading with 'latin1' encoding if the initial load fails
         checkpoint = torch.load(disease_model_path, map_location=torch.device("cpu"), encoding="latin1")
-        disease_model.load_state_dict(checkpoint)
+        if isinstance(checkpoint, dict):
+            disease_model.load_state_dict(checkpoint)
+        else:
+            disease_model = checkpoint
+        
         disease_model.eval()
         print("Model loaded successfully with 'latin1' encoding.")
-
+        
         # Save the model in the new format to prevent future issues
         torch.save(disease_model.state_dict(), disease_model_path)
-        print(f"Model re-saved to {disease_model_path} in the standard format.")
+        print(f"Model re-saved to {disease_model_path} in standard format.")
 
     except Exception as e:
         print(f"Error loading model with 'latin1' encoding: {e}")
 
-except Exception as e:
-    # Catch any other exceptions
-    print(f"Error loading model: {e}")
+except _pickle.UnpicklingError:
+    print("Model file may be corrupted or incompatible. Consider re-downloading the model file.")
