@@ -1,8 +1,10 @@
-# Initialize the model architecture as in model.py
+# Initialize the model architecture
 disease_model = ResNet9(num_channels=3, num_classes=len(disease_classes))
 
-# Load the saved weights
-disease_model.load_state_dict(torch.load("models/plant_disease_model.pth", map_location=torch.device("cpu")))
-
-# Set the model to evaluation mode
-disease_model.eval()
+# Load the saved model weights
+try:
+    disease_model.load_state_dict(torch.load("models/plant_disease_model.pth", map_location=torch.device("cpu")))
+    disease_model.eval()  # Set the model to evaluation mode
+    print("Model loaded successfully and is in evaluation mode.")
+except Exception as e:
+    print(f"Error loading model: {e}")
